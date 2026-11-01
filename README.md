@@ -46,6 +46,11 @@ A production-ready, real-time collaborative code editor with isolated Docker-bas
 </p>
 <p align="center"><em>JavaScript (Node.js) execution with instant feedback</em></p>
 
+<p align="center">
+  <img src="screenshots/cpp-execution.png" alt="C++ Execution" width="800"/>
+</p>
+<p align="center"><em>C++ compilation and execution with g++ compiler in Docker containers</em></p>
+
 ## ✨ Features
 
 - **Real-Time Collaboration**: Multiple users can edit code simultaneously in shared rooms
