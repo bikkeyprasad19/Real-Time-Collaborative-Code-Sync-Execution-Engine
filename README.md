@@ -438,7 +438,12 @@ MIT License - feel free to use this project for learning or commercial purposes.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit issues or pull requests.
+Contributions are welcome! We'd love your help making this project better.
+
+- 📖 Read our [Contributing Guidelines](CONTRIBUTING.md)
+- 🐛 [Report a bug](https://github.com/bikkeyprasad19/Real-Time-Collaborative-Code-Sync-Execution-Engine/issues/new?template=bug_report.md)
+- 💡 [Request a feature](https://github.com/bikkeyprasad19/Real-Time-Collaborative-Code-Sync-Execution-Engine/issues/new?template=feature_request.md)
+- 🔀 Submit a pull request
 
 ## 📧 Support
 
