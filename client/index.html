@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collaborative Code Editor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="logo">⚡ CodeSync</h1>
+        <div class="room-info" id="roomInfo">
+          <span class="room-label">Room:</span>
+          <span class="room-id" id="roomIdDisplay">Not connected</span>
+          <button class="btn-icon" id="copyRoomBtn" title="Copy Room ID">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="users-container">
+          <div class="users-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <span class="user-count" id="userCount">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Editor Panel -->
+      <div class="editor-panel">
+        <div class="editor-toolbar">
+          <select class="language-select" id="languageSelect">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript (Node.js)</option>
+            <option value="cpp">C++</option>
+          </select>
+          <button class="btn-run" id="runBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Run Code
+          </button>
+        </div>
+        <div class="editor-wrapper">
+          <div id="editor"></div>
+        </div>
+      </div>
+
+      <!-- Console Panel -->
+      <div class="console-panel">
+        <div class="console-header">
+          <span class="console-title">Console Output</span>
+          <button class="btn-icon" id="clearConsoleBtn" title="Clear Console">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="console-content" id="consoleContent">
+          <div class="console-message console-info">
+            Welcome to CodeSync! Enter a room ID to start collaborating.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Room Join Modal -->
+  <div class="modal" id="joinModal">
+    <div class="modal-content">
+      <h2>Join Collaboration Room</h2>
+      <div class="form-group">
+        <label for="usernameInput">Your Name</label>
+        <input type="text" id="usernameInput" placeholder="Enter your name" class="input">
+      </div>
+      <div class="form-group">
+        <label for="roomIdInput">Room ID</label>
+        <input type="text" id="roomIdInput" placeholder="Enter room ID or leave empty for new room" class="input">
+      </div>
+      <button class="btn-primary" id="joinRoomBtn">Join Room</button>
+    </div>
+  </div>
+
+  <!-- Load Socket.io first from local file -->
+  <script src="socket.io.min.js"></script>
+  <script>
+    // Verify Socket.io loaded
+    if (typeof io === 'undefined') {
+      console.error('CRITICAL: Socket.io failed to load!');
+      alert('Socket.io failed to load. Please refresh the page.');
+    } else {
+      console.log('✅ Socket.io loaded successfully');
+    }
+  </script>
+  <!-- Load Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <!-- Load app after dependencies -->
+  <script src="app-collab.js"></script>
+</body>
+</html>

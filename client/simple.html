@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Editor - Simple Mode</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1 class="logo">⚡ CodeSync - Simple Mode</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Editor Panel -->
+      <div class="editor-panel">
+        <div class="editor-toolbar">
+          <select class="language-select" id="languageSelect">
+            <option value="python">Python</option>
+            <option value="javascript">JavaScript (Node.js)</option>
+            <option value="cpp">C++</option>
+          </select>
+          <button class="btn-run" id="runBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Run Code
+          </button>
+        </div>
+        <div class="editor-wrapper">
+          <div id="editor"></div>
+        </div>
+      </div>
+
+      <!-- Console Panel -->
+      <div class="console-panel">
+        <div class="console-header">
+          <span class="console-title">Console Output</span>
+          <button class="btn-icon" id="clearConsoleBtn" title="Clear Console">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="1 4 1 10 7 10"></polyline>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+            </svg>
+          </button>
+        </div>
+        <div class="console-content" id="consoleContent">
+          <div class="console-message console-info">
+            Welcome to CodeSync Simple Mode! Write code and click Run.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script>
+    let editor;
+
+    // Language templates
+    const LANGUAGE_TEMPLATES = {
+      python: '# Write your Python code here\nprint("Hello, World!")',
+      javascript: '// Write your JavaScript code here\nconsole.log("Hello, World!");',
+      cpp: '#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}'
+    };
+
+    // Initialize Monaco Editor
+    require.config({ paths: { vs: 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+    require(['vs/editor/editor.main'], function () {
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: LANGUAGE_TEMPLATES.python,
+        language: 'python',
+        theme: 'vs-dark',
+        fontSize: 14,
+        lineNumbers: 'on',
+        minimap: { enabled: true },
+        automaticLayout: true,
+        tabSize: 4,
+        scrollBeyondLastLine: false,
+        wordWrap: 'on',
+        padding: { top: 16 }
+      });
+
+      console.log('✅ Editor ready');
+    });
+
+    // Log message to console
+    function logToConsole(message, type = 'output') {
+      const consoleContent = document.getElementById('consoleContent');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `console-message console-${type}`;
+      messageDiv.textContent = message;
+      consoleContent.appendChild(messageDiv);
+      consoleContent.scrollTop = consoleContent.scrollHeight;
+    }
+
+    // Clear console
+    function clearConsole() {
+      document.getElementById('consoleContent').innerHTML = '';
+    }
+
+    // Execute code
+    async function executeCode() {
+      const code = editor.getValue();
+      const language = document.getElementById('languageSelect').value;
+      const runBtn = document.getElementById('runBtn');
+
+      if (!code.trim()) {
+        logToConsole('Error: No code to execute', 'error');
+        return;
+      }
+
+      // Disable run button
+      runBtn.disabled = true;
+      runBtn.textContent = 'Running...';
+
+      logToConsole(`Executing ${language} code...`, 'loading');
+
+      try {
+        const response = await fetch('/api/execute', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code, language })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          if (result.stdout) {
+            logToConsole(result.stdout, 'output');
+          }
+          logToConsole('✓ Execution completed successfully', 'success');
+        } else {
+          if (result.stderr) {
+            logToConsole(result.stderr, 'error');
+          }
+          if (result.error) {
+            logToConsole(`Error: ${result.error}`, 'error');
+          }
+        }
+      } catch (error) {
+        logToConsole(`Network error: ${error.message}`, 'error');
+        console.error('Execution error:', error);
+      } finally {
+        // Re-enable run button
+        runBtn.disabled = false;
+        runBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>Run Code';
+      }
+    }
+
+    // Handle language change
+    function handleLanguageChange() {
+      const language = document.getElementById('languageSelect').value;
+      const monacoLanguage = language === 'cpp' ? 'cpp' : language;
+      monaco.editor.setModelLanguage(editor.getModel(), monacoLanguage);
+      logToConsole(`Language changed to ${language}`, 'info');
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      // Run code button
+      document.getElementById('runBtn').addEventListener('click', executeCode);
+
+      // Language selector
+      document.getElementById('languageSelect').addEventListener('change', handleLanguageChange);
+
+      // Clear console button
+      document.getElementById('clearConsoleBtn').addEventListener('click', clearConsole);
+
+      // Keyboard shortcuts
+      window.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + Enter to run code
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          executeCode();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
