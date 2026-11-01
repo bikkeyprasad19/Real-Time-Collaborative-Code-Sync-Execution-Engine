@@ -1,6 +1,18 @@
 # 🚀 Real-Time Collaborative Code Editor with Docker Execution
 
-A production-ready, real-time collaborative code editor with isolated Docker-based code execution. Think Google Docs meets Replit - multiple users can code together in real-time and execute code safely in sandboxed containers.
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-404D59?style=for-the-badge)](https://expressjs.com/)
+[![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)](https://socket.io/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Monaco Editor](https://img.shields.io/badge/Monaco_Editor-0078D7?style=for-the-badge&logo=visual-studio-code&logoColor=white)](https://microsoft.github.io/monaco-editor/)
+
+A production-ready, real-time collaborative code editor with isolated Docker-based code execution. Think **Google Docs meets Replit** - multiple users can code together in real-time and execute code safely in sandboxed containers.
+
+## 🎥 Demo
+
+> **Live Collaboration Demo**: Open two browser tabs, join the same room, and watch code sync in real-time!
+
+**Repository**: [github.com/bikkeyprasad19/Real-Time-Collaborative-Code-Sync-Execution-Engine](https://github.com/bikkeyprasad19/Real-Time-Collaborative-Code-Sync-Execution-Engine)
 
 ## ✨ Features
 
